@@ -1,10 +1,10 @@
 package handlers
 
 import (
-	"video-collector/server/models"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"strconv"
+	"video-collector/server/models"
 )
 
 // GetVideos godoc
@@ -33,7 +33,7 @@ func (h *Handler) GetVideos(c *gin.Context) {
 	query.Count(&total)
 
 	offset := (page - 1) * pageSize
-	if err := query.Offset(offset).Limit(pageSize).Preload("Product").Find(&videos).Error; err != nil {
+	if err := query.Order("created_at DESC").Offset(offset).Limit(pageSize).Preload("Product").Find(&videos).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to retrieve videos"})
 		return
 	}

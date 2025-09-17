@@ -210,6 +210,8 @@ h1 {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 15px; /* Add gap for spacing when wrapped */
 }
 
 .actions {

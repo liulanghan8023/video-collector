@@ -12,12 +12,12 @@
     </thead>
     <tbody>
       <tr v-for="product in products" :key="product.ID">
-        <td>{{ product.ID }}</td>
-        <td>{{ product.name }}</td>
-        <td><a :href="product.url" target="_blank">{{ product.url }}</a></td>
-        <td>{{ getStatusText(product.status) }}</td>
-        <td>{{ new Date(product.created_at).toLocaleString() }}</td>
-        <td class="actions-col">
+        <td data-label="ID">{{ product.ID }}</td>
+        <td data-label="名称">{{ product.name }}</td>
+        <td data-label="URL"><a :href="product.url" target="_blank" class="url-link">{{ product.url }}</a></td>
+        <td data-label="状态">{{ getStatusText(product.status) }}</td>
+        <td data-label="创建时间">{{ new Date(product.created_at).toLocaleString() }}</td>
+        <td data-label="操作" class="actions-col">
           <button @click="$emit('setStatus', product)" class="primary-btn">状态设置</button>
           <button @click="$emit('edit', product)" class="secondary-btn">修改</button>
           <button @click="$emit('delete', product.ID)" class="danger-btn">删除</button>
@@ -49,7 +49,7 @@
 </script>
 
 <style scoped>
-/* 样式与之前页面中的表格样式相同 */
+/* Desktop Styles */
 table {
   width: 100%;
   border-collapse: collapse;
@@ -60,6 +60,7 @@ th, td {
   border: 1px solid var(--color-border);
   padding: 12px 15px;
   text-align: left;
+  vertical-align: middle;
 }
 
 thead {
@@ -79,15 +80,24 @@ td a:hover {
   text-decoration: underline;
 }
 
+.url-link {
+  display: inline-block;
+  max-width: 250px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  vertical-align: middle;
+}
+
 .actions-col {
-  width: auto; /* Adjust width to fit content */
-  white-space: nowrap; /* Prevent buttons from wrapping */
+  width: auto;
+  white-space: nowrap;
   text-align: center;
 }
 
 .actions-col button {
-  margin: 0 2px; /* Reduce margin */
-  padding: 6px 10px; /* Reduce padding */
+  margin: 0 2px;
+  padding: 6px 10px;
 }
 
 /* Buttons */
@@ -105,6 +115,16 @@ button:hover:not(:disabled) {
   background-color: var(--color-background-mute);
 }
 
+.primary-btn {
+    background-color: #42b983;
+    color: var(--vt-c-white);
+    border-color: #42b983;
+}
+
+.primary-btn:hover:not(:disabled) {
+    background-color: #36a471;
+}
+
 .secondary-btn:hover:not(:disabled) {
   border-color: var(--color-border-hover);
 }
@@ -117,5 +137,59 @@ button:hover:not(:disabled) {
 
 .danger-btn:hover:not(:disabled) {
   background-color: #c62828;
+}
+
+/* Mobile Responsive Styles */
+@media (max-width: 768px) {
+  .url-link {
+    max-width: 150px;
+  }
+
+  thead {
+    display: none;
+  }
+
+  tr {
+    display: block;
+    margin-bottom: 15px;
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  }
+
+  td {
+    display: block;
+    text-align: right;
+    padding-left: 40%;
+    position: relative;
+    border: none;
+    border-bottom: 1px solid var(--color-border-hover);
+  }
+
+  td:last-child {
+    border-bottom: none;
+  }
+
+  td::before {
+    content: attr(data-label);
+    position: absolute;
+    left: 15px;
+    width: calc(40% - 30px);
+    padding-right: 10px;
+    white-space: nowrap;
+    text-align: left;
+    font-weight: 600;
+    color: var(--color-heading);
+  }
+
+  .actions-col {
+    width: 100%;
+    text-align: right;
+  }
+
+  .actions-col button {
+    margin: 5px 0 5px 5px;
+  }
 }
 </style>

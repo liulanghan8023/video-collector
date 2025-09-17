@@ -134,4 +134,12 @@ button:hover:not(:disabled) {
 .secondary-btn:hover:not(:disabled) {
   border-color: var(--color-border-hover);
 }
+
+@media (max-width: 768px) {
+  .modal-content {
+    padding: 20px;
+    width: 90%;
+    max-width: 90%;
+  }
+}
 </style>

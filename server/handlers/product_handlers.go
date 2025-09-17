@@ -1,10 +1,10 @@
 package handlers
 
 import (
-	"video-collector/server/models"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"strconv"
+	
 )
 
 // GetProducts godoc
@@ -19,7 +19,7 @@ import (
 func (h *Handler) GetProducts(c *gin.Context) {
 	if c.Query("page") == "" && c.Query("pageSize") == "" {
 		var products []models.Product
-		if err := h.DB.Find(&products).Error; err != nil {
+		if err := h.DB.Order("created_at DESC").Find(&products).Error; err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to retrieve products"})
 			return
 		}
@@ -43,7 +43,7 @@ func (h *Handler) GetProducts(c *gin.Context) {
 	db.Count(&total)
 
 	offset := (page - 1) * pageSize
-	if err := db.Offset(offset).Limit(pageSize).Find(&products).Error; err != nil {
+	if err := db.Order("created_at DESC").Offset(offset).Limit(pageSize).Find(&products).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to retrieve products"})
 		return
 	}
@@ -108,7 +108,6 @@ func (h *Handler) UpdateProductStatus(c *gin.Context) {
 
 	c.JSON(http.StatusOK, product)
 }
-
 
 // UpdateProduct godoc
 // @Summary Update a product

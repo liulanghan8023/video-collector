@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="header">
+    <div class="header flex-wrap">
       <h1>视频管理</h1>
       <button @click="openModal()" class="primary-btn">新增视频</button>
     </div>

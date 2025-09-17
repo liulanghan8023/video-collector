@@ -31,7 +31,7 @@ defineEmits(['confirm', 'cancel']);
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1010; /* Higher z-index */
+  z-index: 1010;
 }
 
 .modal-content {
@@ -84,5 +84,13 @@ button {
 
 .danger-btn:hover:not(:disabled) {
   background-color: #c62828;
+}
+
+/* Simple responsive adjustment */
+@media (max-width: 768px) {
+  .modal-content {
+    width: 90%;
+    max-width: 90%;
+  }
 }
 </style>
