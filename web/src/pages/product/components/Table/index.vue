@@ -5,6 +5,7 @@
         <th>ID</th>
         <th>名称</th>
         <th>URL</th>
+        <th>视频数</th>
         <th>状态</th>
         <th>创建时间</th>
         <th class="actions-col">操作</th>
@@ -15,9 +16,11 @@
         <td data-label="ID">{{ product.ID }}</td>
         <td data-label="名称">{{ product.name }}</td>
         <td data-label="URL"><a :href="product.url" target="_blank" class="url-link">{{ product.url }}</a></td>
+        <td data-label="视频数">{{ product.video_count }}</td>
         <td data-label="状态">{{ getStatusText(product.status) }}</td>
         <td data-label="创建时间">{{ new Date(product.created_at).toLocaleString() }}</td>
         <td data-label="操作" class="actions-col">
+          <button @click="$emit('add-video', product)" class="primary-btn">添加视频</button>
           <button @click="$emit('setStatus', product)" class="primary-btn">状态设置</button>
           <button @click="$emit('edit', product)" class="secondary-btn">修改</button>
           <button @click="$emit('delete', product.ID)" class="danger-btn">删除</button>

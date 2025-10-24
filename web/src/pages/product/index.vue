@@ -21,6 +21,7 @@
       @edit="openModal"
       @delete="promptDelete"
       @setStatus="handleSetStatus"
+      @add-video="openAddVideoModal"
     />
 
     <div class="pagination">
@@ -52,6 +53,13 @@
       @save="handleSaveStatus"
     />
 
+    <AddVideo
+      :show="showAddVideoModal"
+      :product="productForVideo"
+      @close="closeAddVideoModal"
+      @save="handleSaveVideo"
+    />
+
   </div>
 </template>
 
@@ -60,6 +68,7 @@ import { ref, onMounted, computed } from 'vue';
 import Table from './components/Table/index.vue';
 import Edit from './components/Edit/index.vue';
 import StatusEdit from './components/StatusEdit/index.vue';
+import AddVideo from './components/AddVideo/index.vue';
 import ConfirmModal from '../../components/ConfirmModal/index.vue'; // Import shared component
 
 const products = ref([]);
@@ -72,6 +81,10 @@ const selectedStatus = ref('');
 const showModal = ref(false);
 const isEditing = ref(false);
 const currentProduct = ref({});
+
+// Add Video Modal state
+const showAddVideoModal = ref(false);
+const productForVideo = ref({});
 
 // Status Edit Modal state
 const showStatusModal = ref(false);
@@ -150,6 +163,30 @@ const handleSaveStatus = async (productToUpdate) => {
     await fetchProducts();
   } catch (error) {
     console.error('Error updating product status:', error);
+  }
+};
+
+const openAddVideoModal = (product) => {
+  productForVideo.value = product;
+  showAddVideoModal.value = true;
+};
+
+const closeAddVideoModal = () => {
+  showAddVideoModal.value = false;
+};
+
+const handleSaveVideo = async ({ productId, urls }) => {
+  try {
+    const response = await fetch(`/api/products/${productId}/videos`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ urls }),
+        });
+    if (!response.ok) throw new Error('Failed to save videos');
+    closeAddVideoModal();
+  } catch (error) {
+    console.error('Error saving videos:', error);
   }
 };
 

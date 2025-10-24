@@ -4,7 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"strconv"
-	
+	"video-collector/server/models"
 )
 
 // GetProducts godoc
@@ -46,6 +46,12 @@ func (h *Handler) GetProducts(c *gin.Context) {
 	if err := db.Order("created_at DESC").Offset(offset).Limit(pageSize).Find(&products).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to retrieve products"})
 		return
+	}
+
+	for i := range products {
+		var count int64
+		h.DB.Model(&models.Video{}).Where("product_id = ?", products[i].ID).Count(&count)
+		products[i].VideoCount = count
 	}
 
 	c.JSON(http.StatusOK, gin.H{"total": total, "data": products})
@@ -151,4 +157,43 @@ func (h *Handler) DeleteProduct(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusNoContent, nil)
+}
+
+// AddVideosToProduct godoc
+// @Summary Add videos to a product
+// @Description Add multiple videos to a product by product ID
+// @Tags products
+// @Accept json
+// @Produce json
+// @Param id path int true "Product ID"
+// @Param urls body []string true "List of video URLs"
+// @Success 200 {object} gin.H{"message": "Videos added successfully"}
+// @Router /products/{id}/videos [post]
+func (h *Handler) AddVideosToProduct(c *gin.Context) {
+	productID, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid product ID"})
+		return
+	}
+
+	var body struct {
+		URLs []string `json:"urls"`
+	}
+
+	if err := c.ShouldBindJSON(&body); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	var videos []models.Video
+	for _, url := range body.URLs {
+		videos = append(videos, models.Video{ProductID: uint(productID), URL: url, Status: "video_collecting"})
+	}
+
+	if err := h.DB.Create(&videos).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create videos"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "Videos added successfully"})
 }

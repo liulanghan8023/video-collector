@@ -34,6 +34,7 @@ func main() {
 	{
 		api.GET("/products", h.GetProducts)
 		api.POST("/products", h.CreateProduct)
+		api.POST("/products/:id/videos", h.AddVideosToProduct)
 		api.PUT("/products/:id", h.UpdateProduct)
 		api.PUT("/products/:id/status", h.UpdateProductStatus)
 		api.DELETE("/products/:id", h.DeleteProduct)
