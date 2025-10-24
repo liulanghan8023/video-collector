@@ -1,7 +1,6 @@
 <template>
   <div>
     <div class="header">
-      <h1>产品管理</h1>
       <div class="actions">
         <div class="search-container">
           <select v-model="selectedStatus" @change="fetchProducts" class="status-filter">
@@ -254,7 +253,7 @@ h1 {
 .actions {
   display: flex;
   flex-grow: 1;
-  justify-content: flex-end;
+  justify-content: flex-start;
   gap: 10px;
 }
 

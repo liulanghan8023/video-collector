@@ -73,7 +73,7 @@ const toggleSidebar = () => {
 
 .content {
   flex-grow: 1;
-  padding: 24px;
+  padding: 0;
   overflow-y: auto;
   min-width: 0;
 }
